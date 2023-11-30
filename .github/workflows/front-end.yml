@@ -1,7 +1,14 @@
-name: Deploy
+name: Deploy front-end to GitHub Pages
 
 on:
   push:
+    paths:
+      - 'front-end/**'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'front-end/**'
     branches:
       - main
 
@@ -14,7 +21,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: front-end
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -30,23 +39,46 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload production-ready build files
+      - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: production-files
+          name: frontend-build
           path: ./dist
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front-end
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint project
+        run: npm run lint
 
   deploy:
     name: Deploy
-    needs: build
+    needs:
+      - build
+      - lint
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Download artifact
+      - name: Download build artifact
         uses: actions/download-artifact@v3
         with:
-          name: production-files
+          name: frontend-build
           path: ./dist
 
       - name: Setup Pages
@@ -60,4 +92,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
-
