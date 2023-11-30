@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: frontend-build
-          path: ./dist
+          path: ${{ github.workspace }}/front-end/dist/
 
   lint:
     name: Lint
@@ -82,7 +82,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: frontend-build
-          path: ./dist
+          path: ${{ github.workspace }}/dist
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
@@ -90,7 +90,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './dist'
+          path: ${{ github.workspace }}/dist
 
       - name: Deploy to GitHub Pages
         id: deployment
