@@ -1,0 +1,35 @@
+name: Lint
+
+on:
+  push:
+    paths:
+      - 'front-end/**'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'front-end/**'
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front-end
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint project
+        run: npm run lint
