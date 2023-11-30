@@ -38,7 +38,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: frontend-build
+          name: front-end-build
           path: ${{ github.workspace }}/front-end/dist/
 
   lint:
