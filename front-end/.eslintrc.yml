@@ -13,4 +13,5 @@ settings:
   react:
     version: "detect"
 
-rules: {}
+rules:
+  require-jsdoc: "off" 
